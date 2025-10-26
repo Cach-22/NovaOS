@@ -1,9 +1,24 @@
-TARGET = MNOS_POC
-BUILD = build
-SOURCE = source
+# MNOS_POC Makefile for GitHub Codespaces
 
-$(BUILD)/$(TARGET).3dsx: $(SOURCE)/main.cpp
-	@mkdir -p $(BUILD)
-	$(DEVKITARM)/bin/arm-none-eabi-g++ -o $(BUILD)/$(TARGET).3dsx $(SOURCE)/main.cpp -lctru
+# Paths
+DEVKITARM ?= /opt/devkitpro/devkitARM
+INCLUDES = -I$(DEVKITARM)/include -I$(DEVKITARM)/include/3ds
+LIBS = -lctru
 
-all: $(BUILD)/$(TARGET).3dsx
+# Source and output
+SRC = source/main.cpp
+OUT = build/MNOS_POC.3dsx
+
+# Compiler
+CXX = $(DEVKITARM)/bin/arm-none-eabi-g++
+CXXFLAGS = -Wall -O2 -std=c++17 $(INCLUDES)
+
+# Build rules
+all: $(OUT)
+
+$(OUT): $(SRC)
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -o $(OUT) $(SRC) $(LIBS)
+
+clean:
+	rm -rf build
